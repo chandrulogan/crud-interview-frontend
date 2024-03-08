@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Addemployee.css'
 import LogoutComponent from '../../Components/LogoutComponent/LogoutComponent';
+import { getAdminId } from '../../utils/Localstorage';
+import { addEmployeeApi } from '../../Api/Employee';
 
 const Addemployee = () => {
+    const navigate = useNavigate()
+    const adminId = getAdminId()
     const [formData, setformData] = useState({
+        adminId: adminId,
         name: "",
         department: "",
         designation: "",
@@ -24,6 +29,13 @@ const Addemployee = () => {
     const onSubmit = (e) => {
         e.preventDefault()
         console.log(formData);
+
+        addEmployeeApi(formData).then(res => {
+            // console.log("This is API response", res.data);
+            navigate('/')
+        }).catch(err => {
+            console.log(err);
+        })
     }
     return (
         <div className='Home_container'>
@@ -33,7 +45,7 @@ const Addemployee = () => {
                     <input
                         name='name'
                         type='text'
-                        placeholder='Your name'
+                        placeholder='Employee name'
                         onChange={handleChange}
                         required
                         value={formData.name}
@@ -80,7 +92,7 @@ const Addemployee = () => {
                     <Link to={`/`}>Back</Link>
                 </form>
             </div>
-            <LogoutComponent/>
+            <LogoutComponent />
         </div>
     )
 }

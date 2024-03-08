@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import "./Signup.css"
+import { signupApi } from '../../Api/Auth';
 
 const Signup = () => {
+    const navigate = useNavigate()
     const [formData, setformData] = useState({
         name: "",
         email: "",
@@ -27,7 +29,13 @@ const Signup = () => {
                 alert("Password does not match")
                 return
             }
-            console.log(formData);
+            // console.log(formData);
+            signupApi(formData).then(res => {
+                console.log(res.data.status);
+                navigate('/')
+            }).catch(err => {
+                console.log(err);
+            })
 
         } else {
             alert("Password must be greater than 8 digits")

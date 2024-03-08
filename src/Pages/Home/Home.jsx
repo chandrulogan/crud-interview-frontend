@@ -1,10 +1,26 @@
-import React, { } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import './Home.css';
 import { Link } from 'react-router-dom';
 import LogoutComponent from '../../Components/LogoutComponent/LogoutComponent';
+import { getAdminId } from '../../utils/Localstorage';
+import { deleteEmployeeApi, viewMyEmployeeApi } from '../../Api/Employee';
 
 const Home = () => {
+  const adminId = getAdminId()
+  const [apiData, setapiData] = useState([])
+
+  useEffect(() => {
+    viewMyEmployeeApi(adminId).then(res => {
+      console.log(res.data.myEmployees);
+      setapiData(res.data.myEmployees);
+    }).catch(err => {
+      console.log(err);
+    })
+  }, [])
+
+  // console.log("This is API data", apiData);
+
 
   return (
     <div className='Mainpage_Container'>
@@ -24,18 +40,19 @@ const Home = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Chandru</td>
-              <td>Mech</td>
-              <td>Software Developer</td>
-              <td>chandru@gmail.com</td>
-              <td>987653210</td>
-              <td>
-                <Link to={`/view-edit-employee`}>View / Edit</Link>
-                <button>Delete</button>
-              </td>
-            </tr>
+            {apiData.map((apiData, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{apiData.name}</td>
+                <td>{apiData.name}</td>
+                <td>{apiData.designation}</td>
+                <td>{apiData.email}</td>
+                <td>{apiData.mobileNumber}</td>
+                <td>
+                  <Link to={`/view-edit-employee/${apiData._id}`}>View / Edit</Link>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

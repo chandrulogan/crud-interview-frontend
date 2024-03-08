@@ -7,23 +7,23 @@ import EditEmployee from "./Pages/EditEmployee/EditEmployee";
 
 export const appRouter = createBrowserRouter([
     {
-        path:'/',
-        element: <Home/>
+        path: '/',
+        element: <Home />
     },
     {
-        path:'/signup',
-        element: <Signup/>
+        path: '/signup',
+        element: <Signup />
     },
     {
-        path:'/signin',
-        element: <Signin/>
+        path: '/signin',
+        element: <Signin />
     },
     {
-        path:'/add-employee',
-        element: <Addemployee/>
+        path: '/add-employee',
+        element: <Addemployee />
     },
     {
-        path:'/view-edit-employee',
-        element: <EditEmployee/>
+        path: '/view-edit-employee/:id',
+        element: <EditEmployee />
     },
 ])

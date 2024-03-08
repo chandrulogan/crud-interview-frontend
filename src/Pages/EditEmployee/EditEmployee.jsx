@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './EditEmployee.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import LogoutComponent from '../../Components/LogoutComponent/LogoutComponent'
+import { deleteEmployeeApi, updateEmployeeApi, viewIndiEmployeeApi } from '../../Api/Employee'
 
 const EditEmployee = () => {
+  const { id } = useParams()
+  const navigate = useNavigate()
   const [formData, setformData] = useState({
     name: "",
     department: "",
@@ -11,6 +14,21 @@ const EditEmployee = () => {
     mail: "",
     mobileNumber: ""
   })
+
+  useEffect(() => {
+    viewIndiEmployeeApi(id).then(res => {
+      console.log(res.data.myEmployee);
+      setformData({
+        name: res.data.myEmployee.name,
+        department: res.data.myEmployee.department,
+        designation: res.data.myEmployee.designation,
+        mail: res.data.myEmployee.email,
+        mobileNumber: res.data.myEmployee.mobileNumber
+      })
+    }).catch(err => {
+      console.log(err);
+    })
+  }, [1])
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -24,7 +42,24 @@ const EditEmployee = () => {
   const onSubmit = (e) => {
     e.preventDefault()
     console.log(formData);
+
+    updateEmployeeApi(id, formData).then(res => {
+      console.log(res);
+      navigate('/')
+    }).catch(err => {
+      console.log(err);
+    })
   }
+
+  const handleDelete = () => {
+    deleteEmployeeApi(id).then(res => {
+      console.log(res);
+      navigate('/')
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
   return (
     <div className='Home_container'>
       <div className='Home_container__inner'>
@@ -44,7 +79,7 @@ const EditEmployee = () => {
             placeholder='Mail'
             onChange={handleChange}
             required
-            value={formData.email}
+            value={formData.mail}
           />
           <input
             name='mobileNumber'
@@ -52,7 +87,7 @@ const EditEmployee = () => {
             placeholder='Mobile Number'
             onChange={handleChange}
             required
-            value={formData.phoneNumber}
+            value={formData.mobileNumber}
           />
           <select
             name='department'
@@ -75,12 +110,16 @@ const EditEmployee = () => {
           </select>
 
           <button className='formPrimaryButton' type='submit'>
-            Add employee
+            Update Employee
+          </button>
+
+          <button className='formDeleteButton' onClick={handleDelete}>
+            Delete Employee
           </button>
           <Link to={`/`}>Back</Link>
         </form>
       </div>
-      <LogoutComponent/>
+      <LogoutComponent />
     </div>
   )
 }
